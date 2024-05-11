@@ -2,6 +2,7 @@
 import { IHistory } from "@/interface/Igemini";
 import { useState } from "react";
 import styles from "./chat.module.css"
+import ChatFormater from "@/components/ChatFormater";
 
 
 //pega os dados da api do google
@@ -9,7 +10,7 @@ async function getData(prompt: string, history: IHistory[] = []) {
   const res = await fetch('http://localhost:3000/api', {
     headers: {
       prompt: prompt,
-      history: JSON.stringify(history)
+      history: encodeURIComponent(JSON.stringify(history))
     }
   })
 
@@ -49,11 +50,10 @@ export default function Page() {
       <section>
         <h1 className={styles.title} >Bora paear</h1>
         <div className={`${styles.chatBox} ${styles.box}`}>
-
-          <p>{JSON.stringify(conversa)}</p>
+          <ChatFormater historico={conversa} />
         </div>
         <div className={`${styles.userBox} ${styles.box}`}>
-          <input type="text"  placeholder="Digite o comando" value={prompt} onChange={(event) => setPrompt(event.target.value)} />
+          <input type="text" placeholder="Digite o comando" value={prompt} onChange={(event) => setPrompt(event.target.value)} />
           <button onClick={papear} >Enviar</button>
         </div>
       </section>

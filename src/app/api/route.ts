@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   //garante que não havera dados nulos
   let history:IHistory[] = []
   if (historyString) {
-    history = JSON.parse(historyString)
+    history = JSON.parse( decodeURIComponent(historyString) )
   }
   prompt = prompt == null? "" : prompt
   

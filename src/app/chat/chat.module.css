@@ -1,0 +1,44 @@
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 1rem;
+}
+.box {
+  display: flex;
+  background-color: #dcdcdc;
+  width: 95%;
+  padding: 10px;
+  margin: 0 auto 2rem;
+  border-radius: 5px;
+}
+.chatBox {
+  height: 45vh;
+}
+
+.userBox {
+  height: 3rem;
+  gap: 2rem;
+}
+
+.userBox input {
+  width: 90%;
+  border-radius: 5px;
+  border: 1px solid black;
+  background-color: #f2f2f2;
+  padding: 6px;
+}
+
+.userBox button {
+  width: 80px;
+  border-radius: 30px;
+  background-color: rgb(14, 177, 47);
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+
+}
+
+.userBox button:hover {
+  background-color: rgb(20, 146, 45) ;
+}

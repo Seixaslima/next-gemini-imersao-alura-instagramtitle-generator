@@ -1,8 +1,7 @@
 'use client'
 import { IHistory } from "@/interface/Igemini";
-import { Box, Button, TextField } from "@mui/material";
-import { headers } from "next/headers";
 import { useState } from "react";
+import styles from "./chat.module.css"
 
 
 //pega os dados da api do google
@@ -47,14 +46,18 @@ export default function Page() {
 
   return (
     <main>
-      <h1>Bora paear</h1>
-      <Box component='div'>
-        <p>{JSON.stringify(conversa)}</p>
-      </Box>
-      <Box component="div">
-        <TextField id="prompt" placeholder="Digite o comando" value={prompt} onChange={(event) => setPrompt(event.target.value)}></TextField>
-        <Button variant="contained" onClick={papear} >Enviar</Button>
-      </Box>
+      <section>
+        <h1 className={styles.title} >Bora paear</h1>
+        <div className={`${styles.chatBox} ${styles.box}`}>
+
+          <p>{JSON.stringify(conversa)}</p>
+        </div>
+        <div className={`${styles.userBox} ${styles.box}`}>
+          <input type="text"  placeholder="Digite o comando" value={prompt} onChange={(event) => setPrompt(event.target.value)} />
+          <button onClick={papear} >Enviar</button>
+        </div>
+      </section>
+
     </main>
   )
 }

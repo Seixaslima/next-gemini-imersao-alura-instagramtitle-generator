@@ -1,33 +1,20 @@
 'use client'
-import runChat from "@/codes/gemini";
+import { IHistory } from "@/interface/Igemini";
 import { Box, Button, TextField } from "@mui/material";
 import { headers } from "next/headers";
 import { useState } from "react";
-import { json } from "stream/consumers";
 
-// let key = process.env.GEMINI_API_KEY;
 
-async function getData(prompt: string) {
+//pega os dados da api do google
+async function getData(prompt: string, history: IHistory[] = []) {
   const res = await fetch('http://localhost:3000/api', {
     headers: {
       prompt: prompt,
-      history: JSON.stringify([
-        {
-          role: "user",
-          parts: [{ text: "Qual a capital do Brasil?" }]
-        },
-        {
-          role: 'model',
-          parts: [{ text: "Brasilia" }]
-        }
-      ])
+      history: JSON.stringify(history)
     }
   })
-  // The return value is *not* serialized
-  // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data')
   }
 
@@ -38,28 +25,36 @@ async function getData(prompt: string) {
 
 export default function Page() {
   const [prompt, setPrompt] = useState("")
-  const [conversa, setConversa] = useState("")
-  let resposta
+  const [conversa, setConversa] = useState<IHistory[]>([])
+
+
   function papear() {
     if (prompt != "") {
-      resposta = getData(prompt)
+      getData(prompt, conversa)
         .then(resp => {
-          console.log(resp)
-          setConversa(`${conversa} \n ${resp.prompt} \n ${resp.resposta}`);
-          return resp
+          return { prompt: resp.prompt, resposta: resp.resposta }
         })
-
+        .then((resp) => {
+          setPrompt("")
+          const conversaOld = conversa;
+          conversaOld.push({ role: "user", parts: [{ text: resp.prompt }] })
+          conversaOld.push({ role: "model", parts: [{ text: resp.resposta }] })
+          setConversa(conversaOld)
+        }
+        )
     }
   }
 
   return (
     <main>
-      <Box component='section'>
-        <p>{conversa}</p>
-      </Box>
       <h1>Bora paear</h1>
-      <TextField id="prompt" placeholder="Digite o comando" value={prompt} onChange={(event) => setPrompt(event.target.value)}></TextField>
-      <Button variant="contained" onClick={papear} >Enviar</Button>
+      <Box component='div'>
+        <p>{JSON.stringify(conversa)}</p>
+      </Box>
+      <Box component="div">
+        <TextField id="prompt" placeholder="Digite o comando" value={prompt} onChange={(event) => setPrompt(event.target.value)}></TextField>
+        <Button variant="contained" onClick={papear} >Enviar</Button>
+      </Box>
     </main>
   )
 }
